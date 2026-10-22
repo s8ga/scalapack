@@ -20,6 +20,21 @@ F_VOID_FUNC blacs_gridexit_(Int *ConTxt)
 	          "Trying to exit an already freed context");
 
    MGetConTxt(Mpval(ConTxt), ctxt);
+/* Wait for this context's pending asynchronous operations: the lazy
+   sends only complete when a later BLACS call tests them, so without
+   this wait the communicator stays alive past MPI_Finalize as a leak. */
+   {
+      void BI_UpdateBuffs(BLACBUFF *);
+      extern BLACBUFF *BI_ActiveQ;
+      BLACBUFF *bp;
+      int mine;
+      do {
+         BI_UpdateBuffs(NULL);
+         mine = 0;
+         for (bp = BI_ActiveQ; bp; bp = bp->next)
+            if (bp->ctxt == ctxt) { mine = 1; break; }
+      } while (mine);
+   }
 /*
  * Destroy context
  */

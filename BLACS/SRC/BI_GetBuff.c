@@ -49,6 +49,7 @@ BLACBUFF *BI_GetBuff(Int length)
  */
    if (BI_ReadyB)
    {
+      BI_ReadyB->ctxt = NULL;
       if (BI_ReadyB->Len >= length) return(BI_ReadyB);
       else free(BI_ReadyB);
    }
@@ -66,6 +67,7 @@ BLACBUFF *BI_GetBuff(Int length)
    if (BI_ReadyB != NULL)
    {
       BI_ReadyB->nAops = 0;
+      BI_ReadyB->ctxt = NULL;
       BI_ReadyB->Aops = (MPI_Request *) &cptr[j];
       BI_ReadyB->Buff = &cptr[i];
       BI_ReadyB->Len = length;

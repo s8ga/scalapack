@@ -59,6 +59,7 @@ struct bLaCbUfF
    MPI_Request *Aops;   /* list of async. operations out of buff */
    MPI_Datatype dtype;  /* data type of buffer */
    Int N;                  /* number of elements of data type in buff */
+   BLACSCONTEXT *ctxt;     /* context that queued this buffer (may be NULL) */
    BLACBUFF *prev, *next;  /* pointer to the other BLACBUFF in queue */
 };
 
